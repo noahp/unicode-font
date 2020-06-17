@@ -1,8 +1,18 @@
 import io
 import json
+import random
 import sys
+
 import click
 
+def mocking_text(text):
+    """Random capitalization"""
+    random.seed()
+    return "".join(map(lambda x: x.upper() if random.choice((True, False)) else x.lower(), text))
+
+PROGRAMMATIC_ENCODERS = (
+    mocking_text,
+)
 
 def font_encode(text, charmap, ignore_case=False):
     """Encode text with the given charmap"""
@@ -43,6 +53,8 @@ def main(instring=None, font=None, list_fonts=False, ignore_case=False):
     if instring:
         for font, charmap in font_map.items():
             print(font_encode(instring, charmap["charmap"], ignore_case))
+        for encoder in PROGRAMMATIC_ENCODERS:
+            print(encoder(instring))
 
 if __name__ == "__main__":
     main()
