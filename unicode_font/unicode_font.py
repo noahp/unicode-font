@@ -1,9 +1,8 @@
-import io
-import json
 import random
 import sys
 
 import click
+
 
 def mocking_text(text):
     """Random capitalization"""
@@ -31,18 +30,17 @@ def font_encode(text, charmap, ignore_case=False):
 @click.option("--list-fonts", help="Show font names + example text", is_flag=True)
 @click.option("--ignore-case", help="Don't honor captialization", is_flag=True)
 def main(instring=None, font=None, list_fonts=False, ignore_case=False):
-    with io.open("fonts.json", "rt", encoding="utf8") as f:
-        font_map = json.load(f)
+    from unicode_font.fontlib import FONT_MAP
 
     if font is not None:
-        if font not in font_map:
+        if font not in FONT_MAP:
             click.echo("font {} not supported".format(font))
             exit(-1)
-        font_map = {font: font_map[font]}
+        FONT_MAP = {font: FONT_MAP[font]}
 
     if list_fonts:
         example_text = "Lorum Ipsum 01234"
-        for font, charmap in font_map.items():
+        for font, charmap in FONT_MAP.items():
             print("{} : {}".format(font, font_encode(example_text, charmap["charmap"], ignore_case)))
         exit(0)
 
@@ -51,7 +49,7 @@ def main(instring=None, font=None, list_fonts=False, ignore_case=False):
         instring = sys.stdin.read().strip()
 
     if instring:
-        for font, charmap in font_map.items():
+        for font, charmap in FONT_MAP.items():
             print(font_encode(instring, charmap["charmap"], ignore_case))
         for encoder in PROGRAMMATIC_ENCODERS:
             print(encoder(instring))

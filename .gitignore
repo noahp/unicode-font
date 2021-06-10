@@ -1,0 +1,9 @@
+/.eggs
+/.tox
+/*.egg-info/
+*.pyc
+/build/
+/dist/
+
+# generated file
+/unicode_font/fontlib.py
